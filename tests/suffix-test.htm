@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+<head><title>Lightbox demo</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="en" />
+
+<link rel="stylesheet" href="../lwLightbox.css" type="text/css" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type="text/javascript" src="../jquery.lwLightbox.js"></script>
+<script type="text/javascript">
+$(function () {
+
+//You can just select without the suffix, but it's more efficient to just select elements with the suffix
+	var suffix = "-lightbox";
+	$("a[href$=" + suffix + "]")
+	.lwLightbox({
+		group:true,
+		onOpen: function () {},
+		onClose: function () {},
+		selectorSuffix: suffix
+	});
+});
+</script>
+
+<body>
+<div id="links"><p>Links</p>
+	<a class="moreText" id="normalImg" href="../examples/images/grant.jpg-lightbox">Normal image with suffix</a>
+	<a class="moreText" id="tallImg" href="../examples/images/955.png-lightbox">Tall image with suffix</a>
+	<a class="moreText" href="../examples/images/wide.gif">Wide image</a>
+	<a class="moreText" href="../examples/images/grant.jpg">Normal Image</a>
+	<a class="moreText" href="../examples/images/small.gif">Small Image</a>
+	<a class="moreText" href="../examples/ajax-test.htm">HTML page (AJAX)</a>
+</div>
+
+</body>
+</html>

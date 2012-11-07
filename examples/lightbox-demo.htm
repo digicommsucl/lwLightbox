@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+<head><title>Lightbox demo</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="en" />
+
+<link rel="stylesheet" href="css/lwLightbox.css" type="text/css" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type="text/javascript" src="js/lightbox.js"></script>
+<script type="text/javascript">
+$(function () {
+	//To select a gallery, select the ones with rel attributes
+	//$("a").attr('rel', 'trigger').lwLightbox();
+	
+	//To load individual lightboxes
+	$("a").lwLightbox({
+		"selectorSuffix": "-lightbox"
+	});	
+});
+</script>
+
+<body>
+<!--
+<div id="links">
+<a class="test" rel="group" href="images/fff.png">Click on me1!</a><!--NB this must have rel attribute to trigger group lightbox. If you don't want group lightbox, you must not have a rel attribute-->
+<!--
+<a class="test" rel="group" href="images/grant.jpg">Click on me3!</a>
+<a class="test" rel="group" href="images/fff.png">Click on me4!</a>
+<a class="test" rel="group" href="images/grant.jpg">Click on me5!</a>
+</div>
+-->
+<div id="links">
+	<a class="moreText" href="images/fff.png-lightbox">link 1 (suffix)</a>
+	<a class="moreText" href="images/grant.jpg">link 2</a>
+	<a class="moreText" href="images/fff.png">link 3</a>
+	<a class="moreText" href="images/grant.jpg">link 4</a>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "Lightweight lightbox",
+  "description": "Lightweight, accessible, lightbox",
+  "version": "1",
+  "keywords": [
+    "lightbox",
+    "ARIA"
+  ],
+  "author": [
+    {
+      "name": "Nick Dawe",
+      "email": "nicksimondawe@gmail.com",
+    }
+  ],
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+}
+
+

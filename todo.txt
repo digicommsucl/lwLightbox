@@ -1,0 +1,9 @@
+To do
+
+-Develop unobtrusive alternative to '-lightbox' suffixes in WYSIWYG editors
+
+-Add 'transition' public method
+
+-Respond to window resize event
+
+

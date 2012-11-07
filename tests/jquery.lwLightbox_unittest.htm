@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html>
+<head><title>Lightweight lightbox unit tests</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="en" />
+
+<link rel="stylesheet" href="../lwLightbox.css" type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<link rel="stylesheet" href="../lib/qunit/qunit.css" type="text/css" />
+<script type="text/javascript" src="../lib/qunit/qunit.js"></script>
+<script type="text/javascript" src="../lib/jquery.metadata.js"></script>
+
+<script type="text/javascript" src="../jquery.lwLightbox.js"></script>
+
+<script type="text/javascript">
+	module("Testing basic lwLightbox plugin");
+	test("Plugin set up correctly", function () {
+		ok(jQuery, "jQuery loaded");
+		var pluginLoaded = false;
+		if (typeof $.fn.lwLightbox == 'function') {
+			pluginLoaded = true;
+		}
+		ok(pluginLoaded, "Plugin loaded");
+	});
+	test("Default options can be overridden", function () {
+		$("#normalImg").lwLightbox({
+			group: true,
+			autoSize: false
+		});
+		ok($("#normalImg").data("lwLightbox").settings.group, "Group option overridden");
+		deepEqual($("#normalImg").data("lwLightbox").settings.autoSize, false, "Autosize option overridden");
+		
+		$("#normalImg").lwLightbox("destroy");
+	});
+	test("Compatible with metadata plugin", function () {
+		var metadataPluginLoaded = false;
+		if (typeof $.fn.metadata == 'function') {
+			metadataPluginLoaded = true;
+		}
+		ok(metadataPluginLoaded, "Metadata plugin loaded");
+		
+		$("#metaTest").lwLightbox();
+		
+		
+		ok($("#metaTest").data("lwLightbox").settings.group, "Group option overridden by metadata plugin");
+		deepEqual($("#metaTest").data("lwLightbox").settings.autoSize, false, "Autosize option overridden by metadata plugin");
+		
+		$("#metaTest").lwLightbox("destroy");
+	});
+	test("Lightbox opens", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			onOpen: function () {
+				deepEqual($("#lwLightbox").length, 1, "Lightbox opens");
+				
+				$("#links a").lwLightbox("close");
+				
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('normalImg').click();
+	});
+	test("Lightbox closes", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			onOpen: function () {
+				$("#links a").lwLightbox("close");
+				
+			},
+			onClose: function () {
+				deepEqual($("#lwLightbox").length, 0, "Lightbox closes");
+				
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('normalImg').click();
+	});
+	test("Lightbox transitions", function () {
+		stop();
+		expect(6);
+		$("#links a").lwLightbox({	
+			group: true,
+			onOpen: function () {
+				deepEqual($("#lwLightbox").length, 1, "Group lightbox opens");
+				deepEqual($("#arrowR").length, 1, "Right arrow appears");
+				deepEqual($("#lbContent").attr("class"), "lbSegment0", "Correct class added to lightbox segment");
+				$('#arrowR').find(" a").click();
+			},
+			onTransition: function () {
+				deepEqual($("#lwLightbox").length, 1, "Group lightbox is still open after transition");
+				deepEqual($("#arrowL").length, 1, "Left arrow now appears");
+				deepEqual($("#lbContent").attr("class"), "lbSegment1", "Correct class added to 2nd lightbox segment");
+				$(" a").lwLightbox("close");
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('normalImg').click();
+	
+	});
+	test( "Tall image shows with scrollbars - for non-transitions", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			group: true,
+			onOpen: function () {
+				//NB: For some reason testing doesn't work when testing css("height") or css("overflow-y")
+				//Instead am testing css("top") and css("bottom") as these should always be 20px if lightbox content is too big for viewport
+				var h = $("#lwLightbox").css("top");
+				var b = $("#lwLightbox").css("bottom");
+				if ((h === "20px") && (b === "20px")) {
+					ok(true, "Scrollbar (vertical) appears on images taller than viewport in non-transitions");	
+				}
+				$("#links a").lwLightbox("close");
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('tallImg').click();
+	});
+	test( "Tall image shows with scrollbars - for transitions", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			group: true,
+			onOpen: function () {
+				$('#arrowR').find("a").click();
+			},
+			onTransition: function () {
+				//NB: For some reason testing doesn't work when testing css("height") or css("overflow-y")
+				//Instead am testing css("top") and css("bottom") as these should always be 20px if lightbox content is too big for viewport
+				var h = $("#lwLightbox").css("top");
+				var b = $("#lwLightbox").css("bottom");
+				//debugger;
+				if ((h === "20px") && (b === "20px")) {
+					ok(true, "Scrollbar (vertical) appears on images taller than viewport in transitions");	
+				}
+				$("#links a").lwLightbox("close");
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('normalImg').click();
+	});
+	test( "Wide image shows with scrollbars - for non-transitions", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			group: true,
+			onOpen: function () {
+				//NB: For some reason testing doesn't work when testing css("height") or css("overflow-y")
+				//Instead am testing css("top") and css("bottom") as these should always be 20px if lightbox content is too big for viewport
+				var l = $("#lwLightbox").css("left");
+				var r = $("#lwLightbox").css("right");
+				if ((l === "20px") && (r === "20px")) {
+					ok(true, "Scrollbar (horizontal) appears on images taller than viewport in non-transitions");	
+				}
+				$("#links a").lwLightbox("close");
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('wideImg').click();
+	});
+	test("Wide image shows with scrollbars - for transitions", function() {
+		stop();
+		expect(1);
+		
+		$("#links a").lwLightbox({	
+			group: true,
+			onOpen: function () {
+				$('#arrowR').find(" a").click();
+			},
+			onTransition: function () {
+				//NB: For some reason testing doesn't work when testing css("height") or css("overflow-y")
+				//Instead am testing css("top") and css("bottom") as these should always be 20px if lightbox content is too big for viewport
+				var l = $("#lwLightbox").css("left");
+				var r = $("#lwLightbox").css("right");
+				//debugger;
+				if ((l === "20px") && (r === "20px")) {
+					ok(true, "Scrollbar (horizontal) appears on images wider than viewport in transitions");	
+				}
+				$("#links a").lwLightbox("close");
+			},
+			onClose: function () {
+				$("#links a").lwLightbox("destroy");
+				start();
+			}
+		});
+		document.getElementById('tallImg').click();
+	});
+	test("Uses selectorSuffix to open lightbox selectors with suffixes", function() {
+		stop();
+		expect(1);
+		var suffix = "-lightbox";
+		$("a[href$=" + suffix + "]")
+		.lwLightbox({	
+		
+			onOpen: function () {
+				deepEqual($("#lwLightbox").length, 1, "Lightbox opens");
+				$("a[href$=" + suffix + "]").lwLightbox("close");
+			},
+			onClose: function () {
+				$("a[href$=" + suffix + "]").lwLightbox("destroy");
+				start();
+			},
+			selectorSuffix: suffix
+		});
+		document.getElementById('suffixTest').click();
+	});
+
+	
+ 
+ 
+
+</script>
+
+<body >
+<div id="links"><p>Links</p>
+	<a class="moreText" id="normalImg" href="../examples/images/grant.jpg">Normal image</a>
+	<a class="moreText" id="tallImg" href="../examples/images/955.png">Tall image</a>
+	<a class="moreText" id="wideImg" href="../examples/images/wide.gif">Wide image</a>
+	<a class="moreText" href="../examples/images/grant.jpg">Normal Image</a>
+	<a class="moreText" href="../examples/images/small.gif">Small Image</a>
+</div>
+<div id="metadataLink"><p>Link with metadata</p>
+	<p><a class="metaLink {group:true, autoSize:false}" id="metaTest" href="../examples/images/grant.jpg">Metadata link</a></p>
+</div>
+<div id="suffixLink"><p>Suffix link</p>
+	<a id="suffixTest" class="moreText" href="../examples/images/grant.gif-lightbox">Grant image (suffix)</a>
+</div>
+
+<div id="qunit"></div>
+</body>
+</html>
